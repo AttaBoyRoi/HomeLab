@@ -1,0 +1,61 @@
+### Grow LVM drive
+
+### commands
+lvreduce - Reduce the size of a logical volume.
+lvextend - Extend the size of a logical volume.
+e2fsck - Check the filesystem prior to making changes to it.
+resize2fs - A tool to resize ext2 / ext3 / ext4 file systems.
+
+To complete you must:
+Expand the physical volume
+Expand the logical volume(s)
+Expand the file sytem
+
+Step 1 - view all devices
+# fdisk -l
+
+Step 2 - scan for physical volumes
+# pvscan
+  
+  /dev/sda5
+
+Step 3 - unmount the physical volume
+# umount /dev/sda5
+
+Step 4 - resize physical volume
+# resize2fs /dev/sda5 8000M
+
+Step 5 - scan logical volumes
+# lvscan
+
+Step 6 - get the physical device properties
+# pvdisplay | more
+
+  Hard disk 1 - /dev/sda5
+  Volume group - graylog-vg
+
+Step 7 - get the volume group properties
+# vgdisplay
+
+Step 8 - check the logical volume to get [LV Name]
+# lvdisplay
+
+  Logical volume - root
+
+Step 9 - enlarge the logical volume
+
+  lvextend --size +1G /dev/graylog-vg/root
+
+or
+  lvextend -l +100%FREE /dev/graylog-vg/root
+
+  note: The '+' in '+1G' indicate the value is added to the actual size of the logical volume. Without the + sign, the value is taken as an absolute one.
+
+Step 10 - resize the filesystem
+
+First check the filesystem using e2fsck command -
+# e2fsck -f /dev/graylog-vg/root
+
+Step 11 - resize the filesystem using the resize2fs command as follows -
+
+resize2fs /dev/graylog-vg/root 80G
