@@ -1,0 +1,23 @@
+### Virtualbox shrink disk
+
+Step 1 - Cleaning up of partial package:
+# sudo apt-get autoclean
+
+Step 2 - Cleaning up of the apt cache:
+# sudo apt-get clean
+
+Step 3 - Cleaning up of any unused dependencies:
+# sudo apt-get autoremove
+
+Step 4: Clean any free disk space
+# dd if=/dev/zero of=zerofillfile bs=1M
+
+Step 5: remove the zero file
+# rm zerofillfile
+
+Step 5a: Shutdown the Linux Virtual Machine & shrink
+# VboxManage modifyvdi /path/to/your/VM.vdi compact
+"if this doesn't work try the next command"
+
+Step 5b: create a new vm and add vdi
+VboxManage clonehd name-of-original-vm.vdi name-of-clone-vm.vdi
